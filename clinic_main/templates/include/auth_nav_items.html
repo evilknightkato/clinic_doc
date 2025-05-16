@@ -1,0 +1,31 @@
+<li class="nav-item dropdown">
+  <a class="nav-link dropdown-toggle" href="#" id="userMenu" data-bs-toggle="dropdown">
+    <i class="fas fa-user-circle me-1"></i>
+    {{ user.username }}
+    {% if user.is_patient %}
+    <span class="badge bg-success user-type-badge">Пациент</span>
+    {% elif user.is_staff_member %}
+    <span class="badge bg-warning text-dark user-type-badge">Персонал</span>
+    {% endif %}
+  </a>
+  <ul class="dropdown-menu dropdown-menu-end">
+    {% if user.is_patient %}
+    <li><a class="dropdown-item" href="{% url 'patient_dashboard' %}">
+      <i class="fas fa-tachometer-alt me-2"></i>Личный кабинет
+    </a></li>
+    {% elif user.is_staff_member %}
+    <li><a class="dropdown-item" href="{% url 'staff_dashboard' %}">
+      <i class="fas fa-clipboard-list me-2"></i>Панель управления
+    </a></li>
+    {% endif %}
+    <li><hr class="dropdown-divider"></li>
+    <li>
+      <form action="{% url 'logout' %}" method="post" class="d-inline">
+        {% csrf_token %}
+        <button type="submit" class="dropdown-item">
+          <i class="fas fa-sign-out-alt me-2"></i>Выйти
+        </button>
+      </form>
+    </li>
+  </ul>
+</li>
