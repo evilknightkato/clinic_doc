@@ -27,25 +27,24 @@
                 </div>
                 <div class="col-md-6">
                   <p><strong><i class="fas fa-phone me-2"></i>Телефон:</strong></p>
-                  <p>{{ user.phone_user }}</p>
+                  <p>{{ user.phone_user|default:"Телефон не указан" }}</p>
                 </div>
               </div>
               <div class="row mt-3">
                 <div class="col-12">
                   <p><strong><i class="fas fa-id-card-alt me-2"></i>Номер полиса ОМС:</strong></p>
-                  <p>{{ patient.polis_num }}</p>
+                  <p>{{ user.patient_profile.polis_num }}</p>
                 </div>
               </div>
             </div>
           </div>
         </div>
         <div class="card-footer text-end">
-          <a href="#" class="btn btn-outline-primary">
-            <i class="fas fa-edit me-1"></i> Редактировать профиль
-          </a>
+          <a href="#" class="btn btn-outline-primary"> <i class="fas fa-edit me-1"></i> Редактировать профиль </a>
         </div>
       </div>
     </div>
   </div>
 </div>
 {% endblock %}
+

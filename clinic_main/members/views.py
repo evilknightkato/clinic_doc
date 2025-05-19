@@ -3,6 +3,7 @@ from django.contrib.auth import login, logout
 from django.contrib.auth.views import LoginView, LogoutView
 
 from django.contrib.auth.decorators import login_required   # Декоратор для подтверждения пользователя
+from django.views.decorators.http import require_POST
 
 from django.db import IntegrityError
 from .forms import CustomUserCreationForm,PatientSignUpForm,StaffSignUpForm
@@ -29,17 +30,9 @@ def register(request):
         if user_form.is_valid() and patient_form.is_valid():
             try:
                 # Сначала сохраняем пользователя
-                #user = user_form.save(commit=False)
-                #user.set_password(user_form.cleaned_data['password1'])
-                #user.username = user.email
-                #user.save()
                 user = user_form.save()
                 # Затем создаем Patient с ссылкой на CustomUser
                 Patient.objects.create(user=user,polis_num=patient_form.cleaned_data['polis_num'])
-                #patient = patient_form.save(commit=False)
-                #patient.user_ptr = user  # Связываем с CustomUser
-                #patient = Patient(first_name = user.first_name,last_name = user.last_name, middle_name = user.middle_name,phone_user = user.phone_user,email = user.email,polis_num=patient_form.cleaned_data['polis_num'])
-                #patient.save()
                 login(request, user)
                 print("Регистрация успешна, перенаправляю...")  # Отладочное сообщение
                 return redirect('registration_success')
@@ -76,3 +69,17 @@ def profile(request):
         except Staff.DoesNotExist:
             # Обычный пользователь без профиля
             return render(request, 'profile/base_user.html', {'user': request.user})
+
+@login_required
+def logout_confirm(request):
+    """Страница подтверждения выхода"""
+    return render(request, 'registration/logout_confirm.html')
+
+@require_POST
+@login_required
+def custom_logout(request):
+    """Обработчик выхода из системы"""
+    print("Logout called!")  # Должно появиться в консоли сервера
+    #messages.info(request, "Вы успешно вышли из системы")
+    logout(request)
+    return redirect('home')  # Или 'login', если предпочитаете

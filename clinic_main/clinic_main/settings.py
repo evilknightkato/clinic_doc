@@ -86,6 +86,11 @@ DATABASES = {
 }
 
 AUTH_USER_MODEL = 'members.CustomUser'
+
+LOGOUT_REDIRECT_URL = 'login'  # Куда перенаправлять после выхода
+SESSION_COOKIE_AGE = 1209600  # Время жизни сессии (2 недели)
+SESSION_SAVE_EVERY_REQUEST = True  # Обновлять сессию при каждом запросе
+
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
 
