@@ -14,6 +14,7 @@ class PatientSignUpForm(forms.ModelForm):
         model = Patient
         fields = ('polis_num',)
 
+
 class StaffSignUpForm(forms.ModelForm):
     class Meta:
         model = Staff

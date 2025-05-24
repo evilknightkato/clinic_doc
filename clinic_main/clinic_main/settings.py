@@ -87,6 +87,9 @@ DATABASES = {
 
 AUTH_USER_MODEL = 'members.CustomUser'
 
+LOGIN_URL = 'login'
+LOGIN_REDIRECT_URL = 'profile_redirect'  # Общий роутер
+
 LOGOUT_REDIRECT_URL = 'login'  # Куда перенаправлять после выхода
 SESSION_COOKIE_AGE = 1209600  # Время жизни сессии (2 недели)
 SESSION_SAVE_EVERY_REQUEST = True  # Обновлять сессию при каждом запросе
