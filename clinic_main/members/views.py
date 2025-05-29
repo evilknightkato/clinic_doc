@@ -1,25 +1,23 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout
 from django.contrib.auth.views import LoginView, LogoutView
-
-from django.contrib.auth.decorators import login_required   # Декоратор для подтверждения пользователя
+from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
 
-from django.db import IntegrityError
+#Введение форм
 from .forms import CustomUserCreationForm,PatientSignUpForm,StaffSignUpForm
+#Введение моделей
 from .models import Patient,Staff
-# Create your views here.
 
-def home(request):
+def home_view(request):
     return render(request, 'home.html')
+
+
 
 class CustomLoginView(LoginView):
     template_name = 'login.html'
 
-class CustomLogoutView(LogoutView):
-    template_name = 'logout.html'
-
-def register(request):
+def register_view(request):
     if request.method == 'POST':
         user_form = CustomUserCreationForm(request.POST)
         patient_form = PatientSignUpForm(request.POST)
@@ -50,28 +48,37 @@ def register(request):
 def registration_success(request):
     return render(request, 'registration/success.html')
 
-#@login_required
-#def profile(request):
-#    patient = request.user.patient
-#    return render(request, 'registration/profile.html', {'patient': patient})
 
 @login_required
-def profile(request):
+def profile_redirect_view(request):
+    """Перенаправляет пользователя в соответствующий кабинет"""
+    if request.user.is_staff:
+        return redirect('staff_dashboard')
+    return redirect('patient_profile')
+
+@login_required
+def patient_profile_view(request):
     try:
         # Проверяем, является ли пользователь пациентом
         patient_profile = request.user.patient_profile
-        return render(request, 'registration/profile.html', {'profile': patient_profile})
+        return render(request, 'patient/profile.html', {'profile': patient_profile})
     except Patient.DoesNotExist:
-        try:
-            # Проверяем, является ли пользователь сотрудником
-            staff_profile = request.user.staff_profile
-            return render(request, 'profile/staff.html', {'profile': staff_profile})
-        except Staff.DoesNotExist:
-            # Обычный пользователь без профиля
-            return render(request, 'profile/base_user.html', {'user': request.user})
+        print("Такого нет в списке")
+        return redirect('/patient/profile.html')
+
 
 @login_required
-def logout_confirm(request):
+def staff_dashboard_view(request):
+    try:
+        # Проверяем, является ли пользователь пациентом
+        staff_profile = request.user.staff_profile
+        return render(request, 'staff/dashboard.html', {'profile': staff_profile})
+    except Patient.DoesNotExist:
+        print("Такого нет в списке")
+        return redirect('staff/dashboard.html')
+
+@login_required
+def logout_view(request):
     """Страница подтверждения выхода"""
     return render(request, 'registration/logout_confirm.html')
 
@@ -83,3 +90,4 @@ def custom_logout(request):
     #messages.info(request, "Вы успешно вышли из системы")
     logout(request)
     return redirect('home')  # Или 'login', если предпочитаете
+

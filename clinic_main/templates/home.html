@@ -4,14 +4,14 @@
 
 {% block content %}
 <div class="home-hero">
-  <h1 class="display-4">Добро пожаловать в MedPortal</h1>
-  <p class="lead">Профессиональная система для пациентов и медицинского персонала</p>
+    <h1 class="display-4">Добро пожаловать в MedPortal</h1>
+    <p class="lead">Профессиональная система для пациентов и медицинского персонала</p>
 
-  {% if not user.is_authenticated %}
-  <div class="auth-buttons">
-    <a href="{% url 'login' %}" class="btn btn-primary btn-lg">Войти</a>
-    <a href="{% url 'register' %}" class="btn btn-outline-secondary btn-lg">Регистрация</a>
-  </div>
-  {% endif %}
+    {% if not user.is_authenticated %}
+    <div class="auth-buttons">
+        <a href="{% url 'login' %}" class="btn btn-primary btn-lg">Войти</a>
+        <a href="{% url 'register' %}" class="btn btn-outline-secondary btn-lg">Регистрация</a>
+    </div>
+    {% endif %}
 </div>
 {% endblock %}

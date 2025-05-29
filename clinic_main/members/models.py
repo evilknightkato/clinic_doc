@@ -1,11 +1,9 @@
+
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.db.models.signals import pre_save
 from django.dispatch import receiver
 
-from django.core.validators import validate_email
-
-# Create your models here.
 
 class CustomUser(AbstractUser):
     email = models.EmailField(unique=True,verbose_name='Email')
@@ -23,8 +21,6 @@ class CustomUser(AbstractUser):
         """Генерация username в формате userXXXX"""
         max_id = cls.objects.aggregate(max_id=models.Max('id'))['max_id'] or 0
         return f"user{max_id + 1:04d}"
-    #def __str__(self):
-    #    return f"{self.username} ({'Персонал' if self.is_staff else 'Клиент'})"
 
 class Patient(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE,primary_key=True,related_name='patient_profile')
